@@ -1,0 +1,55 @@
+EXPLORING THE PLOTLY USING BREAST CANCER DATA
+========================================================
+author: OLUWADARE MARGARET
+date: 30TH SEPTEMBER, 2020
+autosize: true
+INTRODUCTION
+========================================================
+Dr. William H. Wolberg of the University of Wisconsin pioneered the
+Wisconsin Breast Cancer Data in 1990. His goal of collecting the data was to identify
+whether a tumor biopsy was malignant or benign. His team collected the samples
+using Fine Needle Aspiration (FNA). Our aim here is to demonstrate the use of `plotly` in plotting this data set.
+
+To do this we will access the `Mass` library and read in the data called `biospy`. The following till be carried out:
+
+- Read in the data
+- Relabel varaiable names
+- Perform some data cleaning and exploration
+- Plot the data using `plotly`
+
+PREPARE THE ENVIRONMENT
+========================================================
+ The following library will be used and the `biospy` data set from the `MASS` library will be used. 
+
+```{r loading library and data, echo=TRUE}
+library(MASS); library(corrplot); library(ggplot2); library(tidyverse);
+library(plotly)
+library(rgl); library(rglwidget)
+data(biopsy)
+```
+We perform some cleaning by removing the `id` variable, renaming the varaible and ommiting `na's`.
+
+```{r perform data cleaning, echo=TRUE}
+bc <- biopsy[-1]
+names(bc) <- c("age", "mnp", "ts", "inv", "ndc", "deM", "breast", "brtq", "irat", "class" )
+bc = na.omit(bc)
+str(bc)
+```
+
+PLOT OF DATA
+========================================================
+```{r Plot, echo=TRUE}
+# Point colors
+marker <- list(color = ~class, colorscale = c('#FFE1A1', '#683531'), 
+               showscale = TRUE)
+# Create the plot
+p <- plot_ly(bc, x = ~age, y = ~mnp, z = ~brtq, marker = marker) %>%
+  add_markers() %>%
+  layout(
+    scene = list(xaxis = list(title = 'age'),
+                 yaxis = list(title = 'menopause'),
+                 zaxis = list(title = 'breast quarter'), 
+                 title = "Breast cancer Data")
+  )
+p
+```
